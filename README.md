@@ -1,6 +1,6 @@
 # PCR Open Source Thermocycler
 
-This project was created as a seminar paper with the participation of students from Teplice High School. The goal of this project is to develop an open-source PCR thermocycler that can be used for a wide range of applications.
+This project was created as a seminar paper with the participation of students and professors from Teplice's Gymnasium. The goal of this project is to develop an open-source PCR thermocycler that can be used for a wide range of applications. 
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -14,13 +14,14 @@ This project was created as a seminar paper with the participation of students f
 9. [License](#license)
 
 ## Introduction
-This project is open to the community and aims to provide an affordable and flexible PCR thermocycler. The system is designed to be customizable for various experimental needs.
+This project is open to the community and aims to provide an affordable and flexible PCR thermocycler. The system is designed to be customizable for various experimental needs. We are aiming for intuitive control's and choice to source and build your own thermocycler by your self. For start just with pc terminal. Future plans are that the thermocycler could by controled via web ui and can be chained together with other devices.
 
 ## Features
-- Open hardware design with a 3D printable model
-- Software for controlling thermal cycles
-- Easily configurable through an external configuration file
-- Support for additional sensors and extensions
+- 3d printable model for easier production 
+- customizable software for thermocycler control
+- Easily configurable through an configuration file
+- fast thermal cycles
+- temerature curve control 
 
 ## 3D Model
 The 3D model of the thermocycler is available in the `3d-model/` directory. This model is designed for standard FDM 3D printers. For detailed information on how to print and assemble the device, refer to the [Assembly Guide](3d-model/AssemblyGuide.md).
@@ -33,11 +34,7 @@ The software is designed to control the thermal cycle and manage the hardware. T
 
 ### Basic Commands:
 
-      # Install dependencies
-      pip install -r requirements.txt
-      
-      # Run the application
-      python main.py
+            "not complete yet"
 
 ## Configuration File
 
