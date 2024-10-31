@@ -32,6 +32,13 @@ The software is designed to control the thermal cycle and manage the hardware. T
 - Monitoring current temperature
 - Automatic temperature regulation
 
+## PCB
+# Features
+![80940304-fc0c-4376-bb2e-e3a7954d1017](https://github.com/user-attachments/assets/40f816aa-ec4a-4304-87d1-c17b76234714)
+![PCR_2024-Oct-30_01-12-43PM-000_CustomizedView5624348658](https://github.com/user-attachments/assets/8add586d-8fb2-45bc-89fe-fcc8e61ae464)
+
+
+
 ### Basic Commands:
 
             "not complete yet"
