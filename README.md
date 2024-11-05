@@ -15,6 +15,7 @@ This project was created as a seminar paper with the participation of students a
 
 ## Introduction
 This project is open to the community and aims to provide an affordable and flexible PCR thermocycler. The system is designed to be customizable for various experimental needs. We are aiming for intuitive control's and choice to source and build your own thermocycler by your self. For start just with pc terminal. Future plans are that the thermocycler could by controled via web ui and can be chained together with other devices.
+![PA030006](https://github.com/user-attachments/assets/200eca1e-558d-40dd-bdcf-11f795fbca2c)
 
 ## Features
 - 3d printable model for easier production 
