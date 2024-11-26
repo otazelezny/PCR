@@ -1,0 +1,54 @@
+{
+    "temperature_sensors": {
+      "sensor_1": {
+        "name": "Temp_Sensor_1",
+        "frequency": 1000,
+        "type": "thermistor",
+        "pin": "A0",
+        "resistor_value": 10000,
+        "enabled": true
+      },
+      "sensor_2": {
+        "name": "Temp_Sensor_2",
+        "frequency": 2000,
+        "type": "thermistor",
+        "pin": "A1",
+        "resistor_value": 10000,
+        "enabled": false
+      }
+    },
+    "heaters": {
+      "heater_1": {
+        "name": "Heater_1",
+        "frequency": 500,
+        "type": "PWM",
+        "pin": "D3",
+        "max_temperature": 100,
+        "enabled": true
+      },
+      "heater_2": {
+        "name": "Heater_2",
+        "frequency": 750,
+        "type": "PWM",
+        "pin": "D5",
+        "max_temperature": 100,
+        "enabled": false
+      }
+    },
+    "fan": {
+      "name": "Cooling_Fan",
+      "frequency": 1500,
+      "type": "PWM",
+      "pin": "D6",
+      "max_speed": 255,
+      "enabled": true
+    },
+    "safety_limits": {
+      "max_temperature": 120,
+      "min_temperature": 0,
+      "emergency_shutdown": {
+        "enabled": true,
+        "temperature_threshold": 130
+      }
+    }
+  }
