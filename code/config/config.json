@@ -50,5 +50,44 @@
         "enabled": true,
         "temperature_threshold": 130
       }
+    },
+    "Cycles": {
+      "start_denaturation":{
+        "target_temp": 92,
+        "time": 5,
+        "pid_kp": 1,
+        "pid_ki": 1,
+        "pid_kd": 1
+      },
+      "denaturation":{
+        "target_temp": 92,
+        "time": 5,
+        "pid_kp": 1,
+        "pid_ki": 1,
+        "pid_kd": 1
+      },
+      "annealing":{
+        "target_temp": 92,
+        "time": 5,
+        "pid_kp": 1,
+        "pid_ki": 1,
+        "pid_kd": 1
+      },
+      "extension":{
+        "target_temp": 92,
+        "time": 5,
+        "pid_kp": 1,
+        "pid_ki": 1,
+        "pid_kd": 1
+      },
+      "final_extension":{
+        "target_temp": 92,
+        "time": 5,
+        "pid_kp": 1,
+        "pid_ki": 1,
+        "pid_kd": 1
+      },
+      "cycles_count":3
+
     }
   }
