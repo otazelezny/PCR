@@ -1,6 +1,18 @@
 import json
 from machine import Pin, PWM
 
+# Load configuration
+def load_config(file_path):
+    try:
+        with open(file_path, "r") as f:
+            return json.load(f)
+    except OSError as e:
+        print(f"Error loading config file '{file_path}': {e}")
+        return None
+    except ValueError as e:
+        print(f"Error parsing JSON in config file '{file_path}': {e}")
+        return None
+
 class PID:
     def __init__(self, kp, ki, kd, setpoint):
         self.kp = kp
@@ -20,18 +32,6 @@ class PID:
         self.prev_error = error
         return (self.kp * error) + (self.ki * self.integral) + (self.kd * derivative)
 
-# Load configuration
-def load_config(file_path):
-    try:
-        with open(file_path, "r") as f:
-            return json.load(f)
-    except OSError as e:
-        print(f"Error loading config file '{file_path}': {e}")
-        return None
-    except ValueError as e:
-        print(f"Error parsing JSON in config file '{file_path}': {e}")
-        return None
-
 # Initialize heaters
 def init_heaters(config):
     heaters = {}
@@ -44,7 +44,8 @@ def init_heaters(config):
             print(f"Heater {heater['name']} is disabled. Skipping initialization.")
             continue
         try:
-            pwm = PWM(Pin(heater["pin"]), freq=heater["frequency"])
+            pwm = PWM(Pin(heater["pin"]))  # Initialize PWM on the specified pin
+            pwm.freq(heater["frequency"])  # Set PWM frequency
             heaters[key] = {
                 "name": heater["name"],
                 "pwm": pwm,
@@ -61,13 +62,21 @@ def update_heater(heater, current_temperature):
     pid = heater["pid"]
     pwm = heater["pwm"]
     max_temperature = heater["max_temperature"]
+    max_power = heater.get("max_power", 100)  # Default to 100%
 
+    # Compute PID output
     output = pid.compute(current_temperature)
-    output = max(0, min(output, 1023))  # Clamp the output to PWM range (0-1023 for 10-bit resolution)
 
+    # Limit the power to max_power percentage
+    output = min(output, max_power)
+
+    # Scale the output to 16-bit PWM range (0-65535)
+    output_u16 = int((output / 100.0) * 65535)
+
+    # Turn off heater if above max_temperature
     if current_temperature > max_temperature:
-        output = 0  # Turn off heater if temperature exceeds max
+        output_u16 = 0
         print(f"Warning: {heater['name']} temperature exceeds maximum. Heater turned off.")
 
-    pwm.duty(int(output))
+    pwm.duty_u16(output_u16)  # Set PWM duty cycle
     return output
