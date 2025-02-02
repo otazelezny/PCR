@@ -84,7 +84,7 @@ def update_heater(heater, current_temperature):
     # Apply the capped output to the PWM
     pwm.duty_u16(output_u16)
 
-    # Debugging output
+    # Debugging otput
     print(
         f"Heater {heater['name']} PID output: {pid_output:.2f}, Limited to max_power: {capped_output:.2f}%, PWM: {output_u16}"
     )

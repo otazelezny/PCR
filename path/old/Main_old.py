@@ -1,8 +1,7 @@
 from machine import ADC, Pin, PWM, reset
 import math
-from simple_pid import PID
+from mail.simple_pid import PID
 import time
-from main.pid_control import 
 count = 5
 
 

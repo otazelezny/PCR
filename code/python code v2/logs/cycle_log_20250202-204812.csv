@@ -1,0 +1,2 @@
+Timestamp,Cycle,Temperature,Heater Name,Heater Power,Fan Power
+2025-02-02 20:48:14,start_denaturation,22.56,Heater_1,0.0,{'Heater_1': 100, 'Heater_2': 100}

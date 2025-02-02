@@ -22,7 +22,7 @@
       "name": "Heater_1",
       "frequency": 50,
       "type": "PWM",
-      "pin": 8,
+      "pin": 6,
       "max_temperature": 100,
       "max_power": 100,
       "enabled": true
@@ -31,7 +31,7 @@
       "name": "Heater_2",
       "frequency": 50,
       "type": "PWM",
-      "pin": 6,
+      "pin": 7,
       "max_temperature": 100,
       "max_power": 100,
       "enabled": true
@@ -41,8 +41,8 @@
     "name": "Cooling_Fan",
     "frequency": 1500,
     "type": "PWM",
-    "pin": 7,
-    "max_power": 80,
+    "pin": 8,
+    "max_power": 100,
     "enabled": true
   },
   "safety_limits": {
@@ -50,7 +50,7 @@
     "min_temperature": 0,
     "emergency_shutdown": {
       "enabled": true,
-      "temperature_threshold": 130
+      "temperature_threshold": 110
     }
   },
   "Cycles": {
@@ -60,35 +60,50 @@
       "time": 5,
       "pid_kp": 1.0,
       "pid_ki": 0.8,
-      "pid_kd": 0.4
+      "pid_kd": 0.4,
+      "cooling_kp": 1.5,
+      "cooling_ki": 0.2,
+      "cooling_kd": 0.05
     },
     "denaturation": {
       "target_temp": 95,
       "time": 30,
       "pid_kp": 1.0,
       "pid_ki": 0.8,
-      "pid_kd": 0.4
+      "pid_kd": 0.4,
+      "cooling_kp": 1.5,
+      "cooling_ki": 0.2,
+      "cooling_kd": 0.05
     },
     "annealing": {
       "target_temp": 55,
       "time": 20,
       "pid_kp": 1.2,
       "pid_ki": 0.9,
-      "pid_kd": 0.5
+      "pid_kd": 0.5,
+      "cooling_kp": 1.5,
+      "cooling_ki": 0.2,
+      "cooling_kd": 0.05
     },
     "extension": {
       "target_temp": 72,
       "time": 40,
       "pid_kp": 1.1,
       "pid_ki": 0.85,
-      "pid_kd": 0.45
+      "pid_kd": 0.45,
+      "cooling_kp": 1.5,
+      "cooling_ki": 0.2,
+      "cooling_kd": 0.05
     },
     "final_extension": {
       "target_temp": 72,
       "time": 5,
       "pid_kp": 1.0,
       "pid_ki": 0.8,
-      "pid_kd": 0.4
+      "pid_kd": 0.4,
+      "cooling_kp": 1.5,
+      "cooling_ki": 0.2,
+      "cooling_kd": 0.05
     }
   }
 }

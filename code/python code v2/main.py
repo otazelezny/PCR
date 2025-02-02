@@ -2,9 +2,10 @@ import time
 from temperature import load_config, init_temp_sensors, read_temperatures
 from heaters import init_heaters, update_heater, PID
 from machine import PWM, Pin
+from logger import create_log_file, log_cycle_data
 
 CONFIG_FILE = "config/config.json"
-
+log_filename = create_log_file()
 
 # Initialize fans
 def init_fan(config):
@@ -83,6 +84,7 @@ def enter_safety_mode(fan, heaters):
 def run_cycle(heaters, sensors, fan, cycle_name, cycle_config):
     """
     Runs a single heating cycle for the given heaters based on the cycle configuration.
+    Uses a second PID controller for cooling.
     """
     target_temp = cycle_config["target_temp"]
     duration = cycle_config["time"]
@@ -90,13 +92,19 @@ def run_cycle(heaters, sensors, fan, cycle_name, cycle_config):
     pid_ki = cycle_config["pid_ki"]
     pid_kd = cycle_config["pid_kd"]
 
-    # Update the PID controller with the cycle's PID parameters for each heater
+    cooling_kp = cycle_config.get("cooling_kp", 1.0)  # Add cooling PID parameters
+    cooling_ki = cycle_config.get("cooling_ki", 0.1)
+    cooling_kd = cycle_config.get("cooling_kd", 0.01)
+
+    # Initialize PID controllers for heating and cooling
     for heater in heaters.values():
         heater["pid"] = PID(kp=pid_kp, ki=pid_ki, kd=pid_kd, setpoint=target_temp)
 
+    cooling_pid = PID(kp=cooling_kp, ki=cooling_ki, kd=cooling_kd, setpoint=target_temp)
+
     start_time = time.time()
     elapsed_time = 0
-    temp_reached = False  # Flag to ensure the temperature reaches the target
+    temp_reached = False  # Ensure temperature reaches target before holding
 
     print(f"Starting {cycle_name}: Target Temp = {target_temp}°C, Duration = {duration}s")
 
@@ -105,38 +113,46 @@ def run_cycle(heaters, sensors, fan, cycle_name, cycle_config):
             # Read temperatures
             temperatures = read_temperatures(sensors)
 
-            # Update heater and fan control
+            heater_power = {}
+            fan_power = 0
+
             for sensor_name, current_temp in temperatures.items():
                 if current_temp is not None:
                     for heater in heaters.values():
-                        output = update_heater(heater, current_temp)  # Update heater power
-                        print(
-                            f"[{cycle_name}] {sensor_name}: {current_temp:.2f}°C | Heater {heater['name']} Output: {output:.2f}%"
-                        )
-                        if current_temp >= target_temp:
-                            temp_reached = True
+                        if current_temp < target_temp:  # Heating Mode
+                            output = update_heater(heater, current_temp)
+                            heater_power[heater["name"]] = output
+                        else:  # Cooling Mode
+                            heater_power[heater["name"]] = 0  # Turn off heaters
 
-                    # Adjust fan speed for fine temperature control
+                        print(f"[{cycle_name}] {sensor_name}: {current_temp:.2f}°C | Heater {heater['name']} Output: {heater_power[heater['name']]:.2f}%")
+
+                    # Cooling PID control for fan
                     if current_temp > target_temp:
-                        set_fan_speed(fan, 80)  # High speed for cooling
-                    elif current_temp >= target_temp - 5:
-                        set_fan_speed(fan, 30)  # Low speed for stabilization
+                        fan_power = cooling_pid.compute(current_temp)  # Use 'compute' or 'update' method
+                        fan_power = max(0, min(100, fan_power))  # Limit fan power to 0-100%
+                        set_fan_speed(fan, fan_power)  # Set fan speed dynamically
+                        print(f"[{cycle_name}] Cooling Mode: Fan Speed = {fan_power:.2f}%")
                     else:
-                        set_fan_speed(fan, 0)  # Turn off fan during normal heating
+                        fan_power = 0
+                        set_fan_speed(fan, fan_power)
+
+                    # Log data every second
+                    for heater_name, power in heater_power.items():
+                        log_cycle_data(log_filename, cycle_name, current_temp, heater_name, power, fan_power)
 
                 else:
                     raise RuntimeError(f"Error reading temperature from {sensor_name}")
 
             elapsed_time = time.time() - start_time
-            time.sleep(1)
+            time.sleep(1)  # Log every second
     except Exception as e:
         print(f"Error during {cycle_name}: {e}")
         print("Activating safety features...")
-        enter_safety_mode(fan, heaters)  # Enter safety mode
+        enter_safety_mode(fan, heaters)
 
     print(f"{cycle_name} completed. Holding for next cycle...")
     set_fan_speed(fan, 0)  # Turn off fan after cycle completion
-
 
 if __name__ == "__main__":
     heaters = None
@@ -145,6 +161,7 @@ if __name__ == "__main__":
 
     try:
         config = load_config(CONFIG_FILE)
+        log_filename = create_log_file()
 
         if config:
             # Initialize temperature sensors, heaters, and fan
@@ -170,6 +187,8 @@ if __name__ == "__main__":
 
             print(f"Running {cycle_count} heating cycle(s)...")
 
+            # Wait for user confirmation before starting cycles
+            input("Press Enter to start the cycles...")
             # Execute the cycles for the specified count
             for cycle_iteration in range(1, cycle_count + 1):
                 print(f"\n=== Cycle {cycle_iteration}/{cycle_count} ===")
