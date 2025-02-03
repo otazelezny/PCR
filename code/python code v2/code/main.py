@@ -1,7 +1,7 @@
 # code/main.py
 import time
 from machine import Pin, PWM
-from config import load_config
+from config.config_loader import load_config
 from sensors import init_sensors
 from logger import create_log_file
 from cycle_control import run_cycles
